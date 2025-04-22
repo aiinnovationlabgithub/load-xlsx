@@ -31,11 +31,30 @@ def submit():
         df_pre = pd.read_excel(file)
         result_left = pd.merge(df_true, df_pre, on='會員編號', how='left')
         print("Left Join:\n", result_left)
+        
+        '''
         conf_matrix = confusion_matrix( result_left['label_y'],result_left['label_x'], labels=['loyal', 'partial churn', 'churn'])
         print(conf_matrix)
         print("成功")
         # 計算準確率
         accuracy = accuracy_score(result_left['label_x'], result_left['label_y'])
+        '''
+        
+        labels = ['loyal', 'partial churn', 'churn']
+
+        # 找出實際出現的標籤
+        unique_labels = set(result_left['label_y'].dropna().unique())
+        valid_labels = set(labels)
+        has_valid_data = len(valid_labels & unique_labels) > 0
+
+        if has_valid_data:
+            print(has_valid_data)
+            conf_matrix = confusion_matrix(result_left['label_y'], result_left['label_x'], labels=labels)
+            accuracy = accuracy_score(result_left['label_x'], result_left['label_y'])
+        else:
+            conf_matrix = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+            accuracy = 0.0
+        
         print(f"Accuracy: {accuracy:.2f}")
         # 顯示混淆矩陣並標注標籤名稱
         # disp = ConfusionMatrixDisplay(confusion_matrix=conf_matrix, display_labels=['loyal', 'p_churn', 'churn'])
