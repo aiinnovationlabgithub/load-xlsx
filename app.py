@@ -27,8 +27,10 @@ def submit():
     if file:
         #df_true = pd.read_excel('test_final.xlsx')
         df_true = pd.read_excel('ans.xlsx')
+        df_true = df_true.drop_duplicates(subset='會員編號', keep='first') # 根據會員編號移除重複值，只保留第一次出現的資料
         print(df_true['會員編號'])
         df_pre = pd.read_excel(file)
+        df_pre = df_pre.drop_duplicates(subset='會員編號', keep='first') # 根據會員編號移除重複值，只保留第一次出現的資料
         result_left = pd.merge(df_true, df_pre, on='會員編號', how='left')
         print("Left Join:\n", result_left)
         
